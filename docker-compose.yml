@@ -1,8 +1,7 @@
 version: '3.3'
 services:
-  postgres:
-    image: postgres:12.2
-    container_name: postgres
+  management_db:
+    image: postgres:latest
     ports:
       - 5432:5432
     environment:
@@ -11,3 +10,10 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PORT: "5432"
       POSTGRES_DB: manager
+
+  task-management:
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config.json:/config.json

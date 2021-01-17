@@ -4,7 +4,7 @@
   "listen_url": ":8080",
   "pagination_max_limit": 1000,
   "postgres": {
-    "host": "localhost",
+    "host": "management_db",
     "port": "5432",
     "database": "manager",
     "user": "postgres",

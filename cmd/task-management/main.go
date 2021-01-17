@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const defaultConfigPath = "config.json"
+const defaultConfigPath = "./../config.json"
 
 func main() {
 	err := config.Load(defaultConfigPath)
