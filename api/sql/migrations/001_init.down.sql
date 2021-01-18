@@ -1,6 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS trigger_update_timestamp;
-DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS tasks;
+DROP TABLE IF EXISTS columns;
+DROP TABLE IF EXISTS projects;
 
 COMMIT;
