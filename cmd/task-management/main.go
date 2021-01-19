@@ -24,19 +24,14 @@ func main() {
 		log.Fatalf("Failed to laod logger: %s", err.Error())
 	}
 
-	err = postgres.Load(config.Get().Postgres, logger.Sugar())
+	db, err := postgres.Open(config.Get().Postgres)
 	if err != nil {
 		logger.Fatal("Failed to connect to postgres", zap.Error(err))
 	}
-	/*
-		err = repo.Load()
-		if err != nil {
-			logger.Fatal("Failed to initialize postgres repo", zap.Error(err))
-		}
-	*/
+
 	server := &http.Server{
 		Addr:    config.Get().ListenURL,
-		Handler: handlers.NewRouter(),
+		Handler: handlers.NewRouter(*db),
 	}
 
 	logger.Info("Listening...", zap.String("listen_url", config.Get().ListenURL))
