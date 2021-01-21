@@ -1,13 +1,12 @@
 package projects
 
 import (
-	"github.com/Omelman/task-management/api/context"
 	"github.com/Omelman/task-management/api/models"
-	"net/http"
+	"github.com/Omelman/task-management/api/repo"
 )
 
-func CreateProject(r *http.Request, newProject models.ProjectRequest) (models.Project, error) {
-	project, err := context.Project(r).Create(models.Project{
+func CreateProject(newProject models.ProjectRequest) (models.Project, error) {
+	project, err := repo.Get().Projects().Create(models.Project{
 		ID:          newProject.ID,
 		ProjectName: newProject.ProjectName,
 		Description: newProject.Description,
@@ -15,6 +14,5 @@ func CreateProject(r *http.Request, newProject models.ProjectRequest) (models.Pr
 	if err != nil {
 		return models.Project{}, err
 	}
-
 	return project, nil
 }

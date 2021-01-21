@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/Omelman/task-management/api/config"
 	"github.com/Omelman/task-management/api/handlers"
+	"github.com/Omelman/task-management/api/logger"
+	"github.com/Omelman/task-management/api/repo"
 	"github.com/Omelman/task-management/api/repo/postgres"
 	"log"
 	"net/http"
@@ -19,25 +21,30 @@ func main() {
 		log.Fatalf("Failed to load config: %s", err.Error())
 	}
 
-	logger, err := zap.NewProduction()
+	err = logger.Load()
 	if err != nil {
 		log.Fatalf("Failed to laod logger: %s", err.Error())
 	}
 
-	db, err := postgres.Open(config.Get().Postgres)
+	err = postgres.Load(config.Get().Postgres)
 	if err != nil {
-		logger.Fatal("Failed to connect to postgres", zap.Error(err))
+		logger.Get().Fatal("Failed to connect to postgres", zap.Error(err))
+	}
+
+	err = repo.Load()
+	if err != nil {
+		logger.Get().Fatal("Failed to initialize postgres repo", zap.Error(err))
 	}
 
 	server := &http.Server{
 		Addr:    config.Get().ListenURL,
-		Handler: handlers.NewRouter(*db),
+		Handler: handlers.NewRouter(),
 	}
 
-	logger.Info("Listening...", zap.String("listen_url", config.Get().ListenURL))
+	logger.Get().Info("Listening...", zap.String("listen_url", config.Get().ListenURL))
 	err = server.ListenAndServe()
 	if err != nil {
-		logger.Error("Failed to initialize HTTP server", zap.Error(err))
+		logger.Get().Error("Failed to initialize HTTP server", zap.Error(err))
 		os.Exit(1)
 	}
 }

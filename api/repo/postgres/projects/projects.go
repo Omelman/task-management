@@ -3,14 +3,17 @@ package projects
 import (
 	"database/sql"
 	"github.com/Omelman/task-management/api/models"
+	"github.com/Omelman/task-management/api/repo/postgres"
 )
 
 type projects struct {
 	db *sql.DB
 }
 
-func NewProjects(db *sql.DB) *projects {
-	return &projects{db: db}
+func NewProjects() *projects {
+	return &projects{
+		db: postgres.GetDB().DB(),
+	}
 }
 
 func (q *projects) Create(newProject models.Project) (models.Project, error) {

@@ -1,7 +1,6 @@
 package projects
 
 import (
-	"encoding/json"
 	"github.com/Omelman/task-management/api/models"
 	"github.com/Omelman/task-management/api/services/projects"
 	"log"
@@ -9,13 +8,14 @@ import (
 )
 
 func CreateProject(w http.ResponseWriter, r *http.Request) {
-	var req models.ProjectRequest
-
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Fatal(err)
+	req := models.ProjectRequest{
+		ID:          1,
+		ProjectName: "test_name",
+		Description: "description",
 	}
 
-	_, err := projects.CreateProject(r, req)
+	_, err := projects.CreateProject(req)
+
 	if err != nil {
 		log.Fatal(err)
 	}

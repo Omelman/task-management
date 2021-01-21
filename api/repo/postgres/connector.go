@@ -5,39 +5,42 @@ import (
 	"fmt"
 	"github.com/Omelman/task-management/api/config"
 	_ "github.com/lib/pq"
-	"github.com/pkg/errors"
+	"log"
+	"sync"
 )
 
-type DB struct {
+type Postgres struct {
 	db *sql.DB
 }
 
-func (db *DB) RawDB() *sql.DB {
-	return db.db
+var (
+	postgres *Postgres
+	once     = &sync.Once{}
+)
+
+func Load(opts config.Postgres) error {
+	once.Do(func() {
+		connStr := fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+			opts.Host, opts.Port, opts.User,
+			opts.Password, opts.Database, "disable",
+		)
+		db, err := sql.Open("postgres", connStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		postgres = &Postgres{
+			db: db,
+		}
+	})
+
+	return postgres.db.Ping()
 }
 
-func (db *DB) Clone() *DB {
-	return &DB{
-		db: db.db,
-	}
+func GetDB() *Postgres {
+	return postgres
 }
 
-func Open(opts config.Postgres) (*DB, error) {
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		opts.Host, opts.Port, opts.User,
-		opts.Password, opts.Database, "disable",
-	)
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to connect to database")
-	}
-	err = db.Ping()
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to ping database")
-	}
-
-	return &DB{
-		db: db,
-	}, nil
+func (p *Postgres) DB() *sql.DB {
+	return p.db
 }
