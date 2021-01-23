@@ -1,6 +1,7 @@
 package projects
 
 import (
+	"github.com/Omelman/task-management/api/handlers/common"
 	"github.com/Omelman/task-management/api/models"
 	"github.com/Omelman/task-management/api/services/projects"
 	"log"
@@ -14,11 +15,11 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 		Description: "description",
 	}
 
-	_, err := projects.CreateProject(req)
+	project, err := projects.CreateProject(req)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	w.WriteHeader(http.StatusOK)
+	common.SendResponse(w, http.StatusOK, project)
 }
