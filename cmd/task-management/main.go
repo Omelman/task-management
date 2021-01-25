@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/Omelman/task-management/api/config"
-	"github.com/Omelman/task-management/api/handlers"
-	"github.com/Omelman/task-management/api/logger"
-	"github.com/Omelman/task-management/api/repo"
-	"github.com/Omelman/task-management/api/repo/postgres"
+	"github.com/Omelman/task-management/internal/config"
+	"github.com/Omelman/task-management/internal/handlers"
+	"github.com/Omelman/task-management/internal/logger"
+	"github.com/Omelman/task-management/internal/repo"
+	"github.com/Omelman/task-management/internal/repo/postgres"
 	"log"
 	"net/http"
 	"os"
