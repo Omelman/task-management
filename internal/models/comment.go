@@ -9,7 +9,7 @@ type CommentListRequest struct {
 }
 
 type Comment struct {
-	ID     int    `json:"id"`
-	Text   string `json:"text"`
-	TaskID int    `json:"task_id"`
+	ID          int    `json:"id"`
+	CommentText string `json:"comment_text"`
+	TaskID      int    `json:"task_id"`
 }

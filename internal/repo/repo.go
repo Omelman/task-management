@@ -2,7 +2,9 @@ package repo
 
 import (
 	"github.com/Omelman/task-management/internal/repo/postgres/columns"
+	"github.com/Omelman/task-management/internal/repo/postgres/comments"
 	"github.com/Omelman/task-management/internal/repo/postgres/projects"
+	"github.com/Omelman/task-management/internal/repo/postgres/tasks"
 	"sync"
 )
 
@@ -14,6 +16,8 @@ var (
 type postgresRepo struct {
 	projects projects.Projects
 	columns  columns.Columns
+	tasks    tasks.Tasks
+	comments comments.Comments
 }
 
 func Get() Repo {
@@ -25,6 +29,8 @@ func Load() (err error) {
 		repo = postgresRepo{
 			projects: projects.NewProjects(),
 			columns:  columns.NewColumns(),
+			tasks:    tasks.NewTasks(),
+			comments: comments.NewComments(),
 		}
 	})
 	return err
@@ -36,4 +42,12 @@ func (r postgresRepo) Projects() projects.Projects {
 
 func (r postgresRepo) Columns() columns.Columns {
 	return r.columns
+}
+
+func (r postgresRepo) Tasks() tasks.Tasks {
+	return r.tasks
+}
+
+func (r postgresRepo) Comments() comments.Comments {
+	return r.comments
 }
